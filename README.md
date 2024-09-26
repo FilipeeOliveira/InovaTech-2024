@@ -1,8 +1,8 @@
-# App parra o InovaTech 2024 (nome a decidir)
+# App para o InovaTech 2024 (nome a decidir)
 
 ## Descrição
 
-[Projeto dedicado a criação de um app para monitoramento, avisos, suporte a queimadas.]
+Projeto dedicado a criação de um app para monitoramento, avisos, suporte a queimadas.
 
 ## Pré-requisitos
 
