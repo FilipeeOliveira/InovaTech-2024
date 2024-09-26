@@ -1,4 +1,4 @@
-# App Fire Sense
+# App Fire Sense.
 
 ## Descrição
 
