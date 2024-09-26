@@ -1,4 +1,4 @@
-# App para o InovaTech 2024 (nome a decidir)
+# App Fire Sense
 
 ## Descrição
 
