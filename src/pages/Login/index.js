@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image } from 'react-native';
+import { Alert, Image, Text } from 'react-native';
 import * as S from './LoginStyles';
 
 const Login = ({ navigation, onLogin }) => {
@@ -21,25 +21,38 @@ const Login = ({ navigation, onLogin }) => {
     return (
         <S.Container>
             <Image
-                source={require('../../../assets/adaptive-icon.png')}
-                style={{ width: 100, height: 100, marginBottom: 20 }}
+                source={require('../../../assets/logo_fireSense.png')}
+                style={{ width: 150, height: 150, marginBottom: 30 }}
             />
 
             <S.Input
-                placeholder="Digite seu usuário."
+                placeholder="Login"
+                placeholderTextColor="#FFFFFF"  /* Cor do placeholder */
                 value={username}
                 onChangeText={setUsername}
             />
             <S.Input
-                placeholder="Digite sua senha."
+                placeholder="Senha"
+                placeholderTextColor="#FFFFFF"  /* Cor do placeholder */
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
             />
+
             <S.ButtonsContainer>
-                <S.LoginButton title="Entrar" onPress={handleLogin} />
-                <S.RegisterButton title="Registre-se" onPress={handleNavigateToRegister} />
+                {/* Apenas o botão de Login agora */}
+                <S.LoginButton onPress={handleLogin}>
+                    <S.ButtonText>Entrar</S.ButtonText>
+                </S.LoginButton>
             </S.ButtonsContainer>
+
+            {/* Mensagem com "Crie sua conta" em laranja, abaixo do botão de entrar */}
+            <S.MessageContainer>
+                <Text>
+                    <S.NewHereText>Novo por aqui? </S.NewHereText>
+                    <S.HighlightText onPress={handleNavigateToRegister}>Crie sua conta</S.HighlightText>
+                </Text>
+            </S.MessageContainer>
         </S.Container>
     );
 };

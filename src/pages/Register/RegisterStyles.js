@@ -17,4 +17,10 @@ export const Input = styled.TextInput`
     padding-horizontal: 10px;
 `;
 
+export const WelcomeText = styled.Text`
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+`;
+
 export const RegisterButton = styled.Button``;
