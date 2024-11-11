@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Image } from 'react-native';
 import * as S from './LoginStyles';
 
 const Login = ({ navigation, onLogin }) => {
@@ -20,19 +20,24 @@ const Login = ({ navigation, onLogin }) => {
 
     return (
         <S.Container>
+            <Image
+                source={require('../../../assets/adaptive-icon.png')}
+                style={{ width: 100, height: 100, marginBottom: 20 }}
+            />
+
             <S.Input
-                placeholder="Username"
+                placeholder="Digite seu usuário."
                 value={username}
                 onChangeText={setUsername}
             />
             <S.Input
-                placeholder="Password"
+                placeholder="Digite sua senha."
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
             />
             <S.ButtonsContainer>
-                <S.LoginButton title="Login" onPress={handleLogin} />
+                <S.LoginButton title="Entrar" onPress={handleLogin} />
                 <S.RegisterButton title="Registre-se" onPress={handleNavigateToRegister} />
             </S.ButtonsContainer>
         </S.Container>
