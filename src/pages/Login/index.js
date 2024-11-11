@@ -27,26 +27,24 @@ const Login = ({ navigation, onLogin }) => {
 
             <S.Input
                 placeholder="Login"
-                placeholderTextColor="#FFFFFF"  /* Cor do placeholder */
+                placeholderTextColor="#FFFFFF"
                 value={username}
                 onChangeText={setUsername}
             />
             <S.Input
                 placeholder="Senha"
-                placeholderTextColor="#FFFFFF"  /* Cor do placeholder */
+                placeholderTextColor="#FFFFFF"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
             />
 
             <S.ButtonsContainer>
-                {/* Apenas o botão de Login agora */}
                 <S.LoginButton onPress={handleLogin}>
                     <S.ButtonText>Entrar</S.ButtonText>
                 </S.LoginButton>
             </S.ButtonsContainer>
 
-            {/* Mensagem com "Crie sua conta" em laranja, abaixo do botão de entrar */}
             <S.MessageContainer>
                 <Text>
                     <S.NewHereText>Novo por aqui? </S.NewHereText>

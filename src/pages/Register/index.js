@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Container, Input, RegisterButton, WelcomeText } from './RegisterStyles';
+import { Container, Input, RegisterButton, ButtonText, WelcomeText, ButtonsContainer } from './RegisterStyles';
 
 function Register({ navigation }) {
     const [username, setUsername] = useState('');
@@ -29,20 +29,27 @@ function Register({ navigation }) {
 
     return (
         <Container>
-            <WelcomeText>Seja bem-vindo - Cadastre-se</WelcomeText>
+            <WelcomeText>Crie sua conta</WelcomeText>
 
             <Input
-                placeholder="Digite seu login."
+                placeholder="Digite seu usuário"
+                placeholderTextColor="#FFFFFF"
                 value={username}
                 onChangeText={setUsername}
             />
             <Input
-                placeholder="Digite sua senha."
+                placeholder="Digite sua senha"
+                placeholderTextColor="#FFFFFF"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
             />
-            <RegisterButton title="Registre-se" onPress={handleRegister} />
+
+            <ButtonsContainer>
+                <RegisterButton onPress={handleRegister}>
+                    <ButtonText>Registre-se</ButtonText>
+                </RegisterButton>
+            </ButtonsContainer>
         </Container>
     );
 }
