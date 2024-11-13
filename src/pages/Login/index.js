@@ -22,6 +22,7 @@ const Login = ({ navigation, onLogin }) => {
         <S.Container>
             <Image
                 source={require('../../../assets/logo_fireSense.png')}
+
                 style={{ width: 140, height: 150, marginBottom: 30 }}
             />
 

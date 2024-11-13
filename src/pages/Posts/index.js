@@ -100,7 +100,7 @@ function Posts({ navigation, route }) {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
             />
-            <Button title="Novo Post" onPress={handleCreatePost} />
+            <Button title="Nova Denúncia" onPress={handleCreatePost} />
             <EditPostModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
