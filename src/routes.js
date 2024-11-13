@@ -15,8 +15,8 @@ export function Routes({ userCredentials }) {
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
 
-                    if (route.name === 'Posts') {
-                        iconName = faNewspaper; // Defina o ícone para a guia "Posts"
+                    if (route.name === 'Denúncias') {
+                        iconName = faNewspaper; // Defina o ícone para a guia "Denuncias"
                     } else if (route.name === 'Perfil') {
                         iconName = faUser; // Defina o ícone para a guia "Profile"
                     } else if (route.name === 'Mapa') {
@@ -28,7 +28,7 @@ export function Routes({ userCredentials }) {
                 },
             })}
         >
-            <Tab.Screen name="Posts" component={Posts} />
+            <Tab.Screen name="Denúncias" component={Posts} />
             <Tab.Screen name='Mapa' component={Map} />
             {userCredentials && (
                 <Tab.Screen name="Perfil">
