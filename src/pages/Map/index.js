@@ -1,8 +1,10 @@
 import React from 'react';
 import { Marker } from 'react-native-maps';
-import { Linking } from 'react-native';
+import { Linking, View, Image } from 'react-native';
 
-import { Container, MapContainer } from './MapStyles';
+import { Container, MapContainer } from './MapStyles'; 
+
+import customMarkerIcon from '../../../assets/fire-icon.png';
 
 function Map() {
     const points = [
@@ -43,7 +45,16 @@ function Map() {
                         }}
                         title={`Point ${index + 1}`}
                         onPress={() => handleOpenNavigationApp(point.latitude, point.longitude)}
-                    />
+                    >
+                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Image
+                                source={customMarkerIcon}
+                                style={{ width: 32, height: 32 }} // Ajuste de tamanho
+                                resizeMode="contain"
+                            />
+                        </View>
+                    </Marker>
+                    
                 ))}
             </MapContainer>
         </Container>
