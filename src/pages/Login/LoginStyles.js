@@ -5,7 +5,7 @@ export const Container = styled.View`
     justify-content: center;
     align-items: center;
     padding-horizontal: 20px;
-    background-color: #F25E3D; 
+    background-color: #fa4925; 
 `;
 
 export const MessageContainer = styled.View`

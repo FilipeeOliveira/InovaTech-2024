@@ -23,7 +23,7 @@ const Login = ({ navigation, onLogin }) => {
             <Image
                 source={require('../../../assets/logo_fireSense.png')}
 
-                style={{ width: 140, height: 150, marginBottom: 30 }}
+                style={{ width: 250, height: 200, marginBottom: 50 }}
             />
 
             <S.Input
