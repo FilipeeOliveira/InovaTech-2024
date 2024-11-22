@@ -10,7 +10,6 @@ import {
   StatusBar,
   StyleSheet,
 } from "react-native";
-import EditPostModal from "../../components/EditPostModal";
 import {
   faThumbsUp,
   faShare,
@@ -22,7 +21,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { loadPostsFromStorage } from "../../utils/postService";
 import { restoreLikesFromStorage } from "../../utils/storage";
-import { handleSharePost } from "../../utils/share";
 import { addNewPost } from "../../utils/addNewPost";
 import { deletePost } from "../../utils/deletePost";
 import { editPost } from "../../utils/editPost";
@@ -38,8 +36,6 @@ import {
   ButtonContainer,
   IconContainer,
   IconText,
-  ShareContainer,
-  ShareText,
 } from "./PostsStyles";
 import { useNavigation } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -182,7 +178,7 @@ function Posts({ userCredentials }) {
     <Container>
       <StatusBar
         barStyle="light-content"
-        backgroundColor="#fff"
+        backgroundColor="transparent"
         hidden={false}
         translucent={true}
         networkActivityIndicatorVisible={true}
@@ -196,22 +192,26 @@ function Posts({ userCredentials }) {
           <View
             style={{
               width: "100%",
-              display: "flex",
-              justifyContent: "center",
               flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: 15,
             }}
           >
+            <Text style={{ fontSize: 24, fontWeight: "bold", color: "#fff" }}>
+              Posts
+            </Text>
             <Image
               source={require("../../../assets/fire-icon.png")}
               style={{ width: 40, height: 40 }}
             />
           </View>
         }
-        ItemSeparatorComponent={
+        /* ItemSeparatorComponent={
           <View
             style={{ width: "100%", height: 0.5, backgroundColor: "#F25E3D" }}
           />
-        }
+        } */
       />
       <TouchableOpacity
         style={{
@@ -312,7 +312,6 @@ function Posts({ userCredentials }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
     zIndex: 20,
     justifyContent: "center",
     backgroundColor: "transparent",

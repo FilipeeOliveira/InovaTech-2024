@@ -33,7 +33,7 @@ export function Routes({ userCredentials }) {
             <FontAwesomeIcon
               icon={iconName}
               size={size}
-              color={focused ? "yellow" : "white"}
+              color={focused ? "#F25E3D" : "white"}
             />
           );
         },

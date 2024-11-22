@@ -1,12 +1,10 @@
-// CreatePost.js
 import React, { useEffect, useState } from "react";
 import { savePost } from "../../utils/storagePosts";
-import { Container, Label, Input, SubmitButton } from "./CreatePostStyles";
+import { Container, Label, Input, SubmitButton, ButtonText, Content, BottomContainer } from "./CreatePostStyles";
 
 function CreatePost({ navigation, route }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [userId, setUserId] = useState();
   const { onPostCreated } = route.params || {};
   const { userCredentials } = route.params || {};
 
@@ -28,11 +26,18 @@ function CreatePost({ navigation, route }) {
 
   return (
     <Container>
-      <Label>Título</Label>
-      <Input value={title} onChangeText={setTitle} />
-      <Label>Mensagem</Label>
-      <Input value={body} onChangeText={setBody} />
-      <SubmitButton title="Enviar" onPress={handleSubmit} />
+      <Content>
+        <Label>Título</Label>
+        <Input value={title} onChangeText={setTitle} />
+        <Label>Mensagem</Label>
+        <Input value={body} onChangeText={setBody} />
+      </Content>
+
+      <BottomContainer>
+        <SubmitButton onPress={handleSubmit}>
+          <ButtonText>Enviar</ButtonText>
+        </SubmitButton>
+      </BottomContainer>
     </Container>
   );
 }
