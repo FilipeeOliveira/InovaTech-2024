@@ -38,14 +38,10 @@ import {
   IconText,
 } from "./PostsStyles";
 import { useNavigation } from "@react-navigation/native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
 
 import { useRef, useMemo } from "react";
+import { CustomBottomSheetPost } from "../../components/CustomBottomSheetPost";
+import EditPostModal from "../../components/EditPostModal";
 
 function Posts({ userCredentials }) {
   const [posts, setPosts] = useState([]);
@@ -61,14 +57,8 @@ function Posts({ userCredentials }) {
 
   const bottomSheetModalRef = useRef(null);
 
-  const snapPoints = useMemo(() => ["50%", "50%"]);
-
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-  }, []);
-
-  const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
   }, []);
 
   useEffect(() => {
@@ -234,69 +224,9 @@ function Posts({ userCredentials }) {
         </Text>
       </TouchableOpacity>
 
-      <GestureHandlerRootView style={styles.container}>
-        <BottomSheetModalProvider>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            onChange={handleSheetChanges}
-            snapPoints={snapPoints}
-            index={1}
-            backgroundStyle={{ backgroundColor: "#292828" }}
-            handleIndicatorStyle={{
-              backgroundColor: "#fff",
-            }}
-          >
-            <BottomSheetView style={styles.contentContainer}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#3c3a3a",
-                  width: "100%",
-                  padding: 20,
-                  borderRadius: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "semibold",
-                    fontSize: 15,
-                  }}
-                >
-                  Compartilhar
-                </Text>
+      <CustomBottomSheetPost ref={bottomSheetModalRef} />
 
-                <FontAwesomeIcon icon={faShare} size={20} color="#fbfbfb" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#3c3a3a",
-                  width: "100%",
-                  padding: 20,
-                  borderRadius: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#fff",
-                    fontWeight: "semibold",
-                    fontSize: 15,
-                  }}
-                >
-                  Salvar
-                </Text>
-
-                <FontAwesomeIcon icon={faBookmark} size={20} color="#fbfbfb" />
-              </TouchableOpacity>
-            </BottomSheetView>
-          </BottomSheetModal>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-
-      {/* <EditPostModal
+      <EditPostModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveEdit}
@@ -304,27 +234,9 @@ function Posts({ userCredentials }) {
         setTitle={setTitle}
         body={body}
         setBody={setBody}
-      /> */}
+      />
     </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    zIndex: 20,
-    justifyContent: "center",
-    backgroundColor: "transparent",
-    position: "static",
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#292828",
-    padding: 20,
-    flexDirection: "column",
-    gap: 10,
-  },
-});
 
 export default Posts;
