@@ -41,6 +41,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useRef, useMemo } from "react";
 import { CustomBottomSheetPost } from "../../components/CustomBottomSheetPost";
+import EditPostModal from "../../components/EditPostModal";
 
 function Posts({ userCredentials }) {
   const [posts, setPosts] = useState([]);
@@ -225,7 +226,7 @@ function Posts({ userCredentials }) {
 
       <CustomBottomSheetPost ref={bottomSheetModalRef} />
 
-      <Edi
+      <EditPostModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveEdit}
