@@ -225,7 +225,7 @@ function Posts({ userCredentials }) {
 
       <CustomBottomSheetPost ref={bottomSheetModalRef} />
 
-      <EditPostModal
+      <Edi
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSave={handleSaveEdit}
