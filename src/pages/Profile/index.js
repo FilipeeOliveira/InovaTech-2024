@@ -46,6 +46,8 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { CustomBottomSheet } from "../../components/CustomBottomSheetPost";
+import { CustomBottomSheetProfilePost } from "../../components/CustomBottomSheetProflePost";
 
 const STORAGE_KEY = "@profile_image";
 
@@ -54,15 +56,21 @@ function Profile({ userCredentials }) {
   const [username, setUsername] = useState(userCredentials.username);
   const [password, setPassword] = useState(userCredentials.password);
   const [posts, setPosts] = useState([]);
+  const [postInformation, setPostInformation] = useState(null);
 
   const navigation = useNavigation();
 
-  const bottomSheetModalRef = useRef(null);
+  const bottomSheetModalUserRef = useRef(null);
+  const bottomSheetModalPostRef = useRef(null);
 
   const snapPoints = useMemo(() => ["50%", "50%"]);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+  const handlePresentModalPressUser = useCallback(() => {
+    bottomSheetModalUserRef.current?.present();
+  }, []);
+
+  const handlePresentModalPressPost = useCallback(() => {
+    bottomSheetModalPostRef.current?.present();
   }, []);
 
   const handleSheetClose = useCallback(() => {
@@ -191,37 +199,14 @@ function Profile({ userCredentials }) {
             >
               {item.title}
             </Text>
-            <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
+            <TouchableOpacity onPress={handlePresentModalPressPost}>
+              <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
+            </TouchableOpacity>
           </View>
 
           <Body>{item.body}</Body>
         </View>
       </TouchableOpacity>
-      <ButtonContainer>
-        {/* <Button title="Editar" onPress={() => handleEditPost(item)} /> */}
-        {/* <TouchableOpacity onPress={() => handleLikePost(item.id)}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <FontAwesomeIcon
-                icon={faHeart}
-                size={20}
-                color={likedPosts.includes(item.id) ? "red" : "white"}
-              />
-              <IconText>{likeCounts[item.id] || 0}</IconText>
-            </View>
-          </TouchableOpacity> */}
-        {/* <TouchableOpacity
-            onPress={() => handleSharePost(item.title, item.body)}
-          >
-            <View style={ShareContainer}>
-              <FontAwesomeIcon icon={faShare} size={20} color="blue" />
-            </View>
-          </TouchableOpacity> */}
-        {/* <Button
-            title="Deletar"
-            color="red"
-            onPress={() => handleDeletePost(item.id)}
-          /> */}
-      </ButtonContainer>
     </View>
   ));
 
@@ -262,7 +247,7 @@ function Profile({ userCredentials }) {
 
         <ContainerHeader>
           <EditButtonContainer>
-            <TouchableOpacity onPress={handlePresentModalPress}>
+            <TouchableOpacity onPress={handlePresentModalPressUser}>
               <Text style={{ color: "#f8f8f8" }}>Editar perfil</Text>
             </TouchableOpacity>
           </EditButtonContainer>
@@ -289,7 +274,7 @@ function Profile({ userCredentials }) {
       <GestureHandlerRootView style={styles.container}>
         <BottomSheetModalProvider>
           <BottomSheetModal
-            ref={bottomSheetModalRef}
+            ref={bottomSheetModalUserRef}
             snapPoints={snapPoints}
             index={1}
             backgroundStyle={{ backgroundColor: "#292828" }}
@@ -336,6 +321,8 @@ function Profile({ userCredentials }) {
           </BottomSheetModal>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
+
+      <CustomBottomSheetProfilePost ref={bottomSheetModalPostRef} />
     </Container>
   );
 }

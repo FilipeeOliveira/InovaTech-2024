@@ -1,5 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Text, FlatList, Button, Alert } from "react-native";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import {
+  Text,
+  FlatList,
+  Button,
+  Alert,
+  View,
+  KeyboardAvoidingView,
+  Animated,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
 import CommentInput from "../../components/CommentInput";
 import EditCommentModal from "../../components/EditCommentModal";
 import {
@@ -12,8 +22,11 @@ import {
   Body,
   CommentItem,
   ButtonContainer,
+  PostContainer,
 } from "./PostDetailsStyles";
-
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { CustomBottomSheetPost } from "../../components/CustomBottomSheetPost";
 const STORAGE_KEY = "@comments_";
 
 function PostDetails({ route }) {
@@ -22,6 +35,12 @@ function PostDetails({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentComment, setCurrentComment] = useState(null);
   const [commentText, setCommentText] = useState("");
+
+  const bottomSheetModalRef = useRef(null);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   useEffect(() => {
     const loadComments = async () => {
@@ -84,23 +103,64 @@ function PostDetails({ route }) {
 
   return (
     <Container>
-      <Title>{post.title}</Title>
-      <Body>{post.body}</Body>
-      <CommentInput onAddComment={handleAddComment} />
+      <PostContainer>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            marginBottom: 10,
+          }}
+        >
+          <Title>{post.title}</Title>
+          <TouchableOpacity onPress={handlePresentModalPress}>
+            <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
+          </TouchableOpacity>
+        </View>
+
+        <Body>{post.body}</Body>
+      </PostContainer>
+
+      <View
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: "#857f7f",
+        }}
+      >
+        <Text style={{ color: "#fff" }}>Comentários</Text>
+      </View>
+
       <FlatList
         data={comments}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <CommentItem>
-            <Text>{item.text}</Text>
-            <ButtonContainer>
+            {/* <Text style={{ color: "#fbfbfb" }}>{item.text}</Text> */}
+
+            <View
+              style={{
+                flexDirection: "row",
+
+                width: "100%",
+                marginBottom: 10,
+              }}
+            >
+              <TouchableOpacity>
+                <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
+              </TouchableOpacity>
+            </View>
+            {/* <ButtonContainer>
               <Button title="Editar" onPress={() => handleEditComment(item)} />
               <Button
                 title="Deletar"
                 color="red"
                 onPress={() => handleDeleteComment(item.id)}
               />
-            </ButtonContainer>
+            </ButtonContainer> */}
+            <Text style={{ color: "#fbfbfb" }}>{item.text}</Text>
           </CommentItem>
         )}
         ListEmptyComponent={<Text>Sem comentários...</Text>}
@@ -113,6 +173,11 @@ function PostDetails({ route }) {
         text={commentText}
         setText={setCommentText}
       />
+
+      <CustomBottomSheetPost ref={bottomSheetModalRef} />
+      <KeyboardAvoidingView behavior="padding">
+        <CommentInput onAddComment={handleAddComment} />
+      </KeyboardAvoidingView>
     </Container>
   );
 }
