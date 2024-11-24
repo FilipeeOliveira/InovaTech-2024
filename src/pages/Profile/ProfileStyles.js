@@ -9,7 +9,7 @@ export const Container = styled.View`
 export const Header = styled.View`
   width: 100%;
   flex-direction: column;
-  justify-content: space-between; /* Ajustado para espaço entre o botão e a imagem */
+  justify-content: space-between;
   align-items: center;
   padding: 20px;
   background-color: #101010;
@@ -18,7 +18,7 @@ export const Header = styled.View`
 export const ContainerHeader = styled.View`
   width: 100%;
   flex-direction: row;
-  justify-content: space-between; /* Ajustado para espaço entre o botão e a imagem */
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -47,7 +47,7 @@ export const EditButtonContainer = styled.View`
 `;
 
 export const ImageContainer = styled.View`
-  margin-left: 20px; /* Mais afastado do botão de editar */
+  margin-left: 20px;
 `;
 
 export const TouchableImage = styled.TouchableOpacity`
@@ -86,4 +86,83 @@ export const Input = styled.TextInput`
 
 export const Buttons = styled.View`
   margin-top: 20px;
+`;
+
+/** Estilos para os posts */
+export const PostCard = styled.View`
+  background-color: #292828;
+  border-radius: 8px;
+  padding: 15px;
+  margin-vertical: 8px;
+`;
+
+export const PostHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+export const PostTitle = styled.Text`
+  font-size: 18px;
+  color: #f8f8f8;
+  font-weight: bold;
+`;
+
+export const PostBody = styled.Text`
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 10px;
+`;
+
+export const PostFooter = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const PostDate = styled.Text`
+  font-size: 12px;
+  color: #aaa;
+`;
+
+export const PostActions = styled.View`
+  flex-direction: row;
+`;
+
+export const ActionButton = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+export const ActionText = styled.Text`
+  font-size: 14px;
+  color: #f8f8f8;
+  margin-left: 5px;
+`;
+
+export const Separator = styled.View`
+  width: 100%;
+  height: 0.5px;
+  background-color: #f25e3d;
+`;
+
+export const EmptyContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const EmptyText = styled.Text`
+  font-size: 16px;
+  color: #f8f8f8;
+`;
+
+export const ButtonRow = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 20px;
 `;
