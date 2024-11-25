@@ -106,6 +106,7 @@ export const PostTitle = styled.Text`
   font-size: 18px;
   color: #f8f8f8;
   font-weight: bold;
+  align-items: center;
 `;
 
 export const PostBody = styled.Text`
@@ -118,6 +119,7 @@ export const PostFooter = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: 10px;
 `;
 
 export const PostDate = styled.Text`

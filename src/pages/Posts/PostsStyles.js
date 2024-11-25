@@ -36,6 +36,7 @@ export const Title = styled.Text`
   font-weight: bold;
   margin-bottom: 8px;
   color: #f5f5f5;
+  align-items: center;
 `;
 
 export const Body = styled.Text`

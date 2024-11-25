@@ -8,9 +8,14 @@ import {
 } from "@gorhom/bottom-sheet";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBookmark, faShare } from "@fortawesome/free-solid-svg-icons";
+import { handleSharePost } from "../../utils/share";
 
 export const CustomBottomSheetPost = forwardRef((props, ref) => {
   const snapPoints = useMemo(() => ["50%", "50%"]);
+
+  console.log(props.postInformation);
+
+  const post = props.postInformation;
 
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -34,6 +39,7 @@ export const CustomBottomSheetPost = forwardRef((props, ref) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
               }}
+              onPress={() => handleSharePost(post.title, post.body, post.image)}
             >
               <Text
                 style={{
@@ -46,28 +52,6 @@ export const CustomBottomSheetPost = forwardRef((props, ref) => {
               </Text>
 
               <FontAwesomeIcon icon={faShare} size={20} color="#fbfbfb" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#3c3a3a",
-                width: "100%",
-                padding: 20,
-                borderRadius: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontWeight: "semibold",
-                  fontSize: 15,
-                }}
-              >
-                Salvar
-              </Text>
-
-              <FontAwesomeIcon icon={faBookmark} size={20} color="#fbfbfb" />
             </TouchableOpacity>
           </BottomSheetView>
         </BottomSheetModal>
