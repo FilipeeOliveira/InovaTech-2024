@@ -52,14 +52,16 @@ function Posts({ userCredentials }) {
   const [body, setBody] = useState("");
   const [likedPosts, setLikedPosts] = useState([]);
   const [likeCounts, setLikeCounts] = useState({});
+  const [postInformation, setPostInformation] = useState({});
 
   const navigation = useNavigation();
 
   const bottomSheetModalRef = useRef(null);
 
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = (title, body, image) => {
     bottomSheetModalRef.current?.present();
-  }, []);
+    passPostInformation(title, body, image);
+  };
 
   useEffect(() => {
     loadPostsFromStorage(setPosts, setLoading);
@@ -98,6 +100,14 @@ function Posts({ userCredentials }) {
     likePost(postId, likedPosts, setLikedPosts, likeCounts, setLikeCounts);
   };
 
+  const passPostInformation = (title, body, image) => {
+    setPostInformation({
+      title: title,
+      body: body,
+      image: image,
+    });
+  };
+
   const renderItem = useCallback(
     ({ item }) => (
       <Card>
@@ -117,13 +127,34 @@ function Posts({ userCredentials }) {
                 width: "100%",
               }}
             >
-              <Title>{item.title}</Title>
-              <TouchableOpacity onPress={handlePresentModalPress}>
+              <Title>
+                {item.title}{" "}
+                <Text style={{ fontSize: 12, color: "#aaa" }}>
+                  {item.createdAt}
+                </Text>{" "}
+              </Title>
+              <TouchableOpacity
+                onPress={() =>
+                  handlePresentModalPress(item.title, item.body, item.image)
+                }
+              >
                 <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
               </TouchableOpacity>
             </View>
 
             <Body>{item.body}</Body>
+
+            {item.image ? (
+              <Image
+                source={{ uri: item.image }}
+                style={{
+                  width: "100%",
+                  height: 400,
+                  borderRadius: 20,
+                  marginTop: 20,
+                }}
+              />
+            ) : null}
           </View>
         </TouchableOpacity>
         <ButtonContainer>
@@ -197,11 +228,6 @@ function Posts({ userCredentials }) {
             />
           </View>
         }
-        /* ItemSeparatorComponent={
-          <View
-            style={{ width: "100%", height: 0.5, backgroundColor: "#F25E3D" }}
-          />
-        } */
       />
       <TouchableOpacity
         style={{
@@ -224,7 +250,10 @@ function Posts({ userCredentials }) {
         </Text>
       </TouchableOpacity>
 
-      <CustomBottomSheetPost ref={bottomSheetModalRef} />
+      <CustomBottomSheetPost
+        ref={bottomSheetModalRef}
+        postInformation={postInformation}
+      />
 
       <EditPostModal
         visible={modalVisible}

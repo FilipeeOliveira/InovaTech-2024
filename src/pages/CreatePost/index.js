@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, Image, TouchableOpacity, Text } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 import {
   Container,
   Label,
@@ -21,23 +22,19 @@ function CreatePost({ navigation, route }) {
   const { onPostCreated } = route.params || {};
   const { userCredentials } = route.params || {};
 
-  const handleImagePick = () => {
-    launchImageLibrary(
-      {
-        mediaType: "photo",
-        includeBase64: false, // Não inclui base64 para imagens grandes
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log("Imagem não selecionada");
-        } else if (response.errorCode) {
-          console.error("Erro ao selecionar imagem", response.errorCode);
-        } else if (response.assets && response.assets.length > 0) {
-          setImageUri(response.assets[0].uri);
-          setIsModalVisible(false);
-        }
-      }
-    );
+  console.log(userCredentials);
+
+  const handleImagePick = async () => {
+    const image = await ImagePicker.launchImageLibraryAsync({
+      mediaType: "photo",
+      includeBase64: false, // Não inclui base64 para imagens grandes
+    });
+
+    if (!image) {
+      throw new Error("Imagem não selecionada");
+    }
+
+    setImageUri(image.assets[0].uri);
   };
 
   const handleSubmit = async () => {
@@ -47,6 +44,7 @@ function CreatePost({ navigation, route }) {
       body,
       image: imageUri,
       userId: userCredentials?.userId,
+      createdAt: new Date().toLocaleDateString(),
     };
     try {
       const storedPosts = (await AsyncStorage.getItem("posts")) || "[]";

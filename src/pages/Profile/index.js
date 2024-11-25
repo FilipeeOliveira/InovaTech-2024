@@ -1,5 +1,18 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Alert, FlatList, View, Text, TouchableOpacity } from "react-native";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import {
+  Alert,
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -8,6 +21,9 @@ import {
   faShare,
   faEllipsis,
   faUserPlus,
+  faEdit,
+  faHeart,
+  faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Container,
@@ -34,7 +50,17 @@ import {
   EmptyText,
   Input,
 } from "./ProfileStyles";
-import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
+import { addNewPost } from "../../utils/addNewPost";
+import { loadProfilePosts } from "../../utils/postService";
+import { CustomBottomSheetPost } from "../../components/CustomBottomSheetPost";
+import { likePost } from "../../utils/likePost";
+import { handleSharePost } from "../../utils/share";
 
 const STORAGE_KEY_POSTS = "@profile_posts";
 
@@ -43,47 +69,38 @@ function Profile({ userCredentials }) {
   const [username, setUsername] = useState(userCredentials.username);
   const [password, setPassword] = useState(userCredentials.password);
   const [posts, setPosts] = useState([]);
+
   const [isEditing, setIsEditing] = useState(false);
 
-  const bottomSheetModalRef = useRef(null);
+  const navigation = useNavigation();
+
+  const bottomSheetModalProfileRef = useRef(null);
+  const bottomSheetModalPostRef = useRef(null);
 
   const snapPoints = useMemo(() => ["50%"], []);
+
+  const handlePresentModalPostPress = (title, body, image) => {
+    bottomSheetModalPostRef.current?.present();
+    passPostInformation(title, body, image);
+  };
 
   // Carregar imagem de perfil
   useEffect(() => {
     const loadProfileImage = async () => {
-      const savedImage = await AsyncStorage.getItem(`${username}_profile_image`);
+      const savedImage = await AsyncStorage.getItem(
+        `${username}_profile_image`
+      );
       if (savedImage) setProfileImage(savedImage);
     };
     loadProfileImage();
   }, [username]);
 
+  const { userId } = userCredentials;
+
   // Carregar posts
   useEffect(() => {
-    const loadPosts = async () => {
-      const storedPosts = await AsyncStorage.getItem(STORAGE_KEY_POSTS);
-      if (storedPosts) setPosts(JSON.parse(storedPosts));
-    };
-    loadPosts();
-  }, []);
-
-  // Salvar novo post
-  const saveNewPost = async (newPost) => {
-    const updatedPosts = [...posts, newPost];
-    setPosts(updatedPosts);
-    await AsyncStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(updatedPosts));
-  };
-
-  // Simular publicação de um novo post
-  const handleNewPost = () => {
-    const newPost = {
-      id: Date.now(),
-      title: "Novo Post",
-      body: "Conteúdo do novo post.",
-      date: new Date().toLocaleDateString(),
-    };
-    saveNewPost(newPost);
-  };
+    loadProfilePosts(setPosts, userId);
+  });
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -100,13 +117,16 @@ function Profile({ userCredentials }) {
     if (!result.canceled) {
       await AsyncStorage.setItem(`${username}_profile_image`, result.uri);
       setProfileImage(result.uri);
-    };
+    }
   };
 
   // Salvar dados do perfil
   const saveProfileData = async () => {
     if (username.trim() === "" || password.trim() === "") {
-      Alert.alert("Erro", "Os campos de usuário e senha não podem estar vazios.");
+      Alert.alert(
+        "Erro",
+        "Os campos de usuário e senha não podem estar vazios."
+      );
       return;
     }
 
@@ -121,37 +141,52 @@ function Profile({ userCredentials }) {
     }
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = useCallback(({ item }) => (
     <PostCard>
       <PostHeader>
-        <PostTitle>{item.title}</PostTitle>
-        <TouchableOpacity onPress={() => {}}>
-          <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
+        <PostTitle>
+          {item.title} <PostDate> {item.createdAt || "Desconhecido"}</PostDate>
+        </PostTitle>
+        <TouchableOpacity>
+          <FontAwesomeIcon icon={faEdit} size={20} color="#fbfbfb" />
         </TouchableOpacity>
       </PostHeader>
       <PostBody>{item.body}</PostBody>
+
+      {item.image ? (
+        <Image
+          source={{ uri: item.image }}
+          style={{
+            width: "100%",
+            height: 400,
+            borderRadius: 20,
+            marginBottom: 20,
+            marginTop: 16,
+          }}
+        />
+      ) : null}
       <PostFooter>
-        <PostDate>Publicado em {item.date || "Desconhecido"}</PostDate>
         <PostActions>
-          <ActionButton>
-            <FontAwesomeIcon icon={faThumbsUp} size={16} color="#f8f8f8" />
-            <ActionText>Curtir</ActionText>
-          </ActionButton>
-          <ActionButton>
-            <FontAwesomeIcon icon={faShare} size={16} color="#f8f8f8" />
-            <ActionText>Compartilhar</ActionText>
-          </ActionButton>
+          <TouchableOpacity
+            onPress={() => handleSharePost(item.title, item.body)}
+          >
+            <ActionButton>
+              <FontAwesomeIcon icon={faShareNodes} size={20} color="#f8f8f8" />
+            </ActionButton>
+          </TouchableOpacity>
         </PostActions>
       </PostFooter>
     </PostCard>
-  );
+  ));
 
   return (
     <BottomSheetModalProvider>
       <Container>
         <Header>
           <ContainerHeader>
-            <Text style={{ fontSize: 25, fontWeight: "bold", color: "#f8f8f8" }}>
+            <Text
+              style={{ fontSize: 25, fontWeight: "bold", color: "#f8f8f8" }}
+            >
               {username}
             </Text>
             <ImageContainer>
@@ -160,17 +195,20 @@ function Profile({ userCredentials }) {
                   <ProfileImage source={{ uri: profileImage }} />
                 ) : (
                   <Placeholder>
-                    <FontAwesomeIcon icon={faUserPlus} size={30} color="#fbfbfb" />
+                    <FontAwesomeIcon
+                      icon={faUserPlus}
+                      size={30}
+                      color="#fbfbfb"
+                    />
                   </Placeholder>
                 )}
               </TouchableImage>
             </ImageContainer>
           </ContainerHeader>
           <ButtonRow>
-            <TouchableOpacity onPress={handleNewPost}>
-              <Text style={{ color: "#fff", fontSize: 16 }}>Publicar Novo Post</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => bottomSheetModalRef.current?.present()}>
+            <TouchableOpacity
+              onPress={() => bottomSheetModalProfileRef.current?.present()}
+            >
               <Text style={{ color: "#fff", fontSize: 16 }}>Editar Perfil</Text>
             </TouchableOpacity>
           </ButtonRow>
@@ -183,7 +221,7 @@ function Profile({ userCredentials }) {
             data={posts}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderItem}
-            ItemSeparatorComponent={<Separator />}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
           />
         ) : (
           <EmptyContainer>
@@ -192,16 +230,23 @@ function Profile({ userCredentials }) {
         )}
 
         {/* Modal de edição de perfil */}
+
         <BottomSheetModal
-          ref={bottomSheetModalRef}
+          ref={bottomSheetModalProfileRef}
           snapPoints={snapPoints}
           index={0}
           backgroundStyle={{ backgroundColor: "#292828" }}
           handleIndicatorStyle={{ backgroundColor: "#fff" }}
         >
           <BottomSheetView style={{ padding: 20 }}>
-            <Text style={{ color: "#fff", marginBottom: 10 }}>Nome de Usuário</Text>
-            <Input value={username} onChangeText={setUsername} placeholder="Usuário" />
+            <Text style={{ color: "#fff", marginBottom: 10 }}>
+              Nome de Usuário
+            </Text>
+            <Input
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Usuário"
+            />
             <Text style={{ color: "#fff", marginBottom: 10 }}>Senha</Text>
             <Input
               value={password}

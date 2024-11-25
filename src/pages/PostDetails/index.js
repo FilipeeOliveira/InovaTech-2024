@@ -9,6 +9,7 @@ import {
   Animated,
   Keyboard,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import CommentInput from "../../components/CommentInput";
 import EditCommentModal from "../../components/EditCommentModal";
@@ -35,12 +36,14 @@ function PostDetails({ route }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentComment, setCurrentComment] = useState(null);
   const [commentText, setCommentText] = useState("");
+  const [information, setInformation] = useState({});
 
   const bottomSheetModalRef = useRef(null);
 
-  const handlePresentModalPress = useCallback(() => {
+  const handlePresentModalPress = (title, body) => {
     bottomSheetModalRef.current?.present();
-  }, []);
+    passPostInformation(title, body);
+  };
 
   useEffect(() => {
     const loadComments = async () => {
@@ -101,6 +104,16 @@ function PostDetails({ route }) {
     setModalVisible(false);
   };
 
+  const passPostInformation = (title, body) => {
+    setInformation({
+      title: post.title,
+      body: post.body,
+    });
+  };
+
+  console.log(post);
+  console.log(comments);
+
   return (
     <Container>
       <PostContainer>
@@ -113,12 +126,26 @@ function PostDetails({ route }) {
           }}
         >
           <Title>{post.title}</Title>
-          <TouchableOpacity onPress={handlePresentModalPress}>
+          <TouchableOpacity
+            onPress={() => handlePresentModalPress(post.title, post.body)}
+          >
             <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
           </TouchableOpacity>
         </View>
 
         <Body>{post.body}</Body>
+
+        {post.image ? (
+          <Image
+            source={{ uri: post.image }}
+            style={{
+              width: 200,
+              height: 300,
+              borderRadius: 20,
+              marginTop: 20,
+            }}
+          />
+        ) : null}
       </PostContainer>
 
       <View
@@ -130,7 +157,7 @@ function PostDetails({ route }) {
           borderColor: "#857f7f",
         }}
       >
-        <Text style={{ color: "#fff" }}>Comentários</Text>
+        <Text style={{ color: "#fff", fontWeight: "bold" }}>Comentários</Text>
       </View>
 
       <FlatList
@@ -138,20 +165,6 @@ function PostDetails({ route }) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <CommentItem>
-            {/* <Text style={{ color: "#fbfbfb" }}>{item.text}</Text> */}
-
-            <View
-              style={{
-                flexDirection: "row",
-
-                width: "100%",
-                marginBottom: 10,
-              }}
-            >
-              <TouchableOpacity>
-                <FontAwesomeIcon icon={faEllipsis} size={20} color="#fbfbfb" />
-              </TouchableOpacity>
-            </View>
             {/* <ButtonContainer>
               <Button title="Editar" onPress={() => handleEditComment(item)} />
               <Button
@@ -163,8 +176,8 @@ function PostDetails({ route }) {
             <Text style={{ color: "#fbfbfb" }}>{item.text}</Text>
           </CommentItem>
         )}
-        ListEmptyComponent={<Text>Sem comentários...</Text>}
         extraData={comments}
+        contentContainerStyle={{ paddingBottom: 30 }}
       />
       <EditCommentModal
         visible={modalVisible}
@@ -174,7 +187,10 @@ function PostDetails({ route }) {
         setText={setCommentText}
       />
 
-      <CustomBottomSheetPost ref={bottomSheetModalRef} />
+      <CustomBottomSheetPost
+        ref={bottomSheetModalRef}
+        postInformation={information}
+      />
       <KeyboardAvoidingView behavior="padding">
         <CommentInput onAddComment={handleAddComment} />
       </KeyboardAvoidingView>
